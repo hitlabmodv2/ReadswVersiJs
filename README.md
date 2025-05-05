@@ -1,7 +1,6 @@
-
 <div align="center">
   <img src="https://pomf2.lain.la/f/tjwpce10.jpg" width="300" alt="WhatsApp Status Bot">
-  
+
   # 📱 WhatsApp Status Bot
   _Auto Read & React to WhatsApp Stories_
 
@@ -14,8 +13,10 @@
 <details>
 <summary>🚀 Run on Replit</summary>
 
-### 📺 Tutorial Video
-[![Tutorial Replit](https://img.youtube.com/vi/x42DvCEqtgQ/0.jpg)](https://www.youtube.com/watch?v=x42DvCEqtgQ)
+╔══════════════════ REPLIT TUTORIAL ══════════════════╗
+
+### 📺 Video Tutorial
+[![Tutorial Replit](https://img.shields.io/badge/Watch%20Tutorial-Click%20Here-red?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=x42DvCEqtgQ)
 
 ### 📝 Langkah-langkah:
 1. Login/Register di [Replit](https://replit.com)
@@ -25,20 +26,23 @@
    ```bash
    # Login dengan QR Code
    npm start
-   
+
    # Login dengan Kode Pairing
    node index.js --pairing-code
    ```
 5. Scan QR code atau masukkan kode pairing
 6. Bot siap digunakan! Cek console untuk status
 
+╚══════════════════════════════════════════════════╝
 </details>
 
 <details>
 <summary>🖥️ Run di Pterodactyl Panel</summary>
 
-### 📺 Tutorial Video
-[![Tutorial Pterodactyl](https://img.youtube.com/vi/fyFyrcM2CC8/0.jpg)](https://www.youtube.com/watch?v=fyFyrcM2CC8)
+╔═════════════ PTERODACTYL PANEL TUTORIAL ═════════════╗
+
+### 📺 Video Tutorial
+[![Tutorial Pterodactyl](https://img.shields.io/badge/Watch%20Tutorial-Click%20Here-blue?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=fyFyrcM2CC8)
 
 ### 🚀 Cara Install di Pterodactyl Panel
 
@@ -76,7 +80,7 @@
    - Klik tombol Start di panel
    - Scan QR atau masukkan kode pairing
    - Bot akan otomatis berjalan
-   
+
 6. 📱 **Fitur Tambahan**
    - Untuk login pairing: `npm run start -- --pairing-code`
    - Cek logs: Klik tab Logs di panel
@@ -96,13 +100,16 @@
 - Jangan share informasi server panel
 - Update node.js dan dependencies secara rutin
 
+╚══════════════════════════════════════════════════╝
 </details>
 
 <details>
 <summary>📱 Run on Termux</summary>
 
-### 📺 Tutorial Video
-[![Tutorial Termux](https://img.youtube.com/vi/u7CBdmMFXFI/0.jpg)](https://www.youtube.com/watch?v=u7CBdmMFXFI)
+╔═════════════════ TERMUX TUTORIAL ═════════════════╗
+
+### 📺 Video Tutorial
+[![Tutorial Termux](https://img.shields.io/badge/Watch%20Tutorial-Click%20Here-green?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=u7CBdmMFXFI)
 
 ### 📝 Tutorial Lengkap di Android:
 
@@ -118,11 +125,11 @@
    ```bash
    # Izinkan akses penyimpanan
    termux-setup-storage
-   
+
    # Update repository
    pkg update -y
    pkg upgrade -y
-   
+
    # Install package yang dibutuhkan
    pkg install nodejs -y
    pkg install nodejs-lts -y
@@ -138,11 +145,11 @@
    cd /sdcard
    mkdir bot-wa
    cd bot-wa
-   
+
    # Clone repository
    git clone --single-branch --branch js https://github.com/Onichaa/readsw.git
    cd readsw
-   
+
    # Install dependencies
    npm install
    ```
@@ -151,7 +158,7 @@
    ```bash
    # Login dengan QR Code
    npm start
-   
+
    # ATAU Login dengan Kode Pairing (Recommended)
    node index.js --pairing-code
    ```
@@ -166,13 +173,13 @@
    ```bash
    # Install PM2
    npm install -g pm2
-   
+
    # Jalankan bot di background
    pm2 start index.js --name "wa-bot"
-   
+
    # Simpan PM2 process
    pm2 save
-   
+
    # Cek status bot
    pm2 logs wa-bot
    ```
@@ -182,7 +189,7 @@
    # Jika error, coba:
    rm -rf node_modules
    npm install
-   
+
    # Reset sesi WA:
    rm -rf sesi
    npm start
@@ -195,9 +202,11 @@
 - WhatsApp terdaftar dengan nomor aktif
 - Backup file sesi secara berkala
 
+╚══════════════════════════════════════════════════╝
 </details>
 
 ## ✨ Features
+╚═══════════════════════════════════════════════╝
 
 - 🔄 Auto Read Status
 - ❤️ Random Emoji Reactions
@@ -206,18 +215,6 @@
 - 🕒 24/7 Online Capability
 - 📊 View Counter
 
-## ⚙️ Configuration
-
-Edit these values in `index.js`:
-```js
-let config = {
-  autoReadStatus: true,      // Auto read stories
-  autoLikeStatus: true,      // Auto react with emoji
-  downloadMediaStatus: true,  // Save media to device
-  sensorNomor: true,         // Hide phone numbers
-  SpeedReadStory: 2000,      // Delay between reads (ms)
-}
-```
 
 ## 📝 License
 This project is [MIT](LICENSE) licensed.
