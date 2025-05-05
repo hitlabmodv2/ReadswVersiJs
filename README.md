@@ -7,6 +7,26 @@
 
   [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
   [![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)](https://nodejs.org/)
+  [![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=flat&logo=whatsapp&logoColor=white)](https://whatsapp.com)
+  [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://javascript.com)
+  [![Run on Repl.it](https://replit.com/badge/github/Onichaa/readsw)](https://replit.com/@replit/readsw)
+
+  <p align="center">
+    <img src="https://img.shields.io/badge/Auto_Read-✨-blue?style=for-the-badge" alt="Auto Read">
+    <img src="https://img.shields.io/badge/Auto_React-🔥-orange?style=for-the-badge" alt="Auto React">
+    <img src="https://img.shields.io/badge/24/7_Online-⚡-green?style=for-the-badge" alt="24/7 Online">
+  </p>
+
+  <p align="center">
+    <b>Simple • Fast • Reliable</b>
+  </p>
+
+  <p align="center">
+    <a href="#features">Features</a> •
+    <a href="#installation">Installation</a> •
+    <a href="#configuration">Configuration</a> •
+    <a href="#license">License</a>
+  </p>
 </div>
 
 ---
