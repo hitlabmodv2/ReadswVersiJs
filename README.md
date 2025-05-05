@@ -10,6 +10,23 @@
   [![WhatsApp](https://img.shields.io/badge/WhatsApp-25D366?style=flat&logo=whatsapp&logoColor=white)](https://whatsapp.com)
   [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://javascript.com)
   [![Run on Repl.it](https://replit.com/badge/github/Onichaa/readsw)](https://replit.com/@replit/readsw)
+  [![Baileys](https://img.shields.io/badge/Baileys-Latest-blue)](https://github.com/WhiskeySockets/Baileys)
+  [![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/Onichaa/readsw/graphs/commit-activity)
+  [![Platform](https://img.shields.io/badge/Platform-Multi--Platform-purple)](#platform-support)
+  [![Size](https://img.shields.io/github/repo-size/Onichaa/readsw?style=flat&color=orange&label=Size)](https://github.com/Onichaa/readsw)
+
+  ### 📱 Platform Support
+  [![Android](https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com)
+  [![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)](https://www.apple.com/ios)
+  [![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)](https://www.linux.org)
+  [![Windows](https://img.shields.io/badge/Windows-0078D6?style=for-the-badge&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
+  [![macOS](https://img.shields.io/badge/macOS-000000?style=for-the-badge&logo=apple&logoColor=white)](https://www.apple.com/macos)
+
+  ### 🛠️ Runtime Support
+  [![NodeJS](https://img.shields.io/badge/Node.js-Server-green?style=for-the-badge&logo=node.js)](https://nodejs.org)
+  [![Python](https://img.shields.io/badge/Python-Server-blue?style=for-the-badge&logo=python)](https://www.python.org)
+  [![Deno](https://img.shields.io/badge/Deno-Server-white?style=for-the-badge&logo=deno)](https://deno.land)
+  [![Bun](https://img.shields.io/badge/Bun-Server-black?style=for-the-badge&logo=bun)](https://bun.sh)
 
   <p align="center">
     <img src="https://img.shields.io/badge/Auto_Read-✨-blue?style=for-the-badge" alt="Auto Read">
@@ -257,10 +274,54 @@ let config = {
 }
 ```
 
+## 🚀 Deployment Options
+
+<div align="center">
+
+[![Deploy on Replit](https://img.shields.io/badge/Deploy%20on-Replit-1B3D6B?style=for-the-badge&logo=replit)](https://replit.com/@replit/readsw)
+[![Run on Gitpod](https://img.shields.io/badge/Run%20on-Gitpod-FFB45B?style=for-the-badge&logo=gitpod)](https://gitpod.io/#https://github.com/Onichaa/readsw)
+[![Deploy on Railway](https://img.shields.io/badge/Deploy%20on-Railway-13121F?style=for-the-badge&logo=railway)](https://railway.app/template/h7StcB)
+[![Deploy on Heroku](https://img.shields.io/badge/Deploy%20on-Heroku-7056BF?style=for-the-badge&logo=heroku)](https://heroku.com/deploy?template=https://github.com/Onichaa/readsw)
+
+</div>
+
+## 💻 Development Support
+
+### Languages
+- JavaScript/Node.js
+- TypeScript
+- Python (via wrapper)
+- Go (via wrapper)
+- Ruby (via wrapper)
+- Java (via wrapper)
+- PHP (via wrapper)
+
+### Frameworks
+- Express.js
+- Fastify
+- Hapi
+- Koa
+- NestJS
+- Next.js
+- Nuxt.js
+
+### Databases
+- MongoDB
+- MySQL
+- PostgreSQL
+- Redis
+- SQLite
+
 ## 📝 License
 This project is [MIT](LICENSE) licensed.
 
 ---
 <div align="center">
-Made with ❤️ by <a href="https://github.com/Onichaa">Onicha</a>
+  <h3>🌟 Support & Community</h3>
+  
+  [![Discord](https://img.shields.io/badge/Join-Discord-7289DA?style=for-the-badge&logo=discord)](https://discord.gg/whatsapp)
+  [![Telegram](https://img.shields.io/badge/Join-Telegram-2CA5E0?style=for-the-badge&logo=telegram)](https://t.me/whatsappbot)
+  [![YouTube](https://img.shields.io/badge/Watch-Tutorial-FF0000?style=for-the-badge&logo=youtube)](https://www.youtube.com/watch?v=tutorial)
+  
+  Made with ❤️ by <a href="https://github.com/Onichaa">Onicha</a>
 </div>
