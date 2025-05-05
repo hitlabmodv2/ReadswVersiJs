@@ -252,15 +252,82 @@
 
 </details>
 
-## ✨ Features
+## ✨ Fitur-Fitur
 
-### 🤖 Core Features
-- 🔄 Auto Read Status with Smart Timing
-- ❤️ Intelligent Emoji Reactions
-- 📥 Media Download & Auto-Save
-- ⚡ Lightning Fast Response Time
-- 🕒 24/7 Online Capability
-- 📊 Advanced View Analytics
+### 🤖 Fitur Utama
+<details>
+<summary>🔄 Baca Status Otomatis</summary>
+
+- **Cara Kerja**: Bot akan otomatis membaca status WhatsApp
+- **Pengaturan**: `autoReadStatus: true/false` di config
+- **Kecepatan**: Bisa diatur di `SpeedReadStory` (ms)
+- **Tombol**: [⚡ Aktifkan Baca Otomatis](https://replit.com/@replit/readsw)
+</details>
+
+<details>
+<summary>❤️ Reaksi Emoji Pintar</summary>
+
+- **Cara Kerja**: Memberikan reaksi emoji secara otomatis
+- **Pengaturan**: `autoLikeStatus: true/false`
+- **Emoji**: Bisa dikustomisasi di `customEmoji`
+- **Tombol**: [💖 Atur Emoji Reaksi](https://replit.com/@replit/readsw)
+</details>
+
+<details>
+<summary>📥 Unduh Media Otomatis</summary>
+
+- **Cara Kerja**: Menyimpan foto/video status
+- **Pengaturan**: `downloadMediaStatus: true/false`
+- **Lokasi**: Tersimpan di folder `./DATA/media`
+- **Tombol**: [💾 Aktifkan Unduh Media](https://replit.com/@replit/readsw)
+</details>
+
+<details>
+<summary>📊 Statistik Lengkap</summary>
+
+- **Cara Kerja**: Mencatat semua aktivitas status
+- **Data**: Total view, media, waktu, dll
+- **Format**: JSON & tampilan console
+- **Tombol**: [📈 Lihat Statistik](https://replit.com/@replit/readsw)
+</details>
+
+### 🛡️ Fitur Keamanan
+<details>
+<summary>🔐 Enkripsi End-to-End</summary>
+
+- **Cara Kerja**: Mengamankan semua data
+- **Sesi**: Tersimpan di folder `./sesi`
+- **Reset**: Hapus folder untuk reset
+- **Tombol**: [🔒 Atur Keamanan](https://replit.com/@replit/readsw)
+</details>
+
+<details>
+<summary>👤 Pengaturan Privasi</summary>
+
+- **Cara Kerja**: Kontrol siapa yang bisa dilihat
+- **Blacklist**: Blokir nomor tertentu
+- **Whitelist**: Izinkan nomor tertentu
+- **Tombol**: [🛡️ Atur Privasi](https://replit.com/@replit/readsw)
+</details>
+
+### ⚙️ Kustomisasi
+<details>
+<summary>⚡ Kontrol Kecepatan</summary>
+
+- **Cara Kerja**: Atur delay antar baca
+- **Setting**: `SpeedReadStory` (dalam ms)
+- **Range**: 1000-5000ms recommended
+- **Tombol**: [⚡ Atur Kecepatan](https://replit.com/@replit/readsw)
+</details>
+
+<details>
+<summary>🎨 Tampilan Console</summary>
+
+- **Cara Kerja**: Kustomisasi output console
+- **Format**: Emoji, warna, layout
+- **Style**: Modern & informatif
+- **Tombol**: [🎨 Atur Tampilan](https://replit.com/@replit/readsw)
+</details>
 
 ### 📱 Status Management
 - 🎯 Selective Status Reading
@@ -294,18 +361,40 @@
 - 🔧 Flexible Config
 - 📱 UI Preferences
 
-## ⚙️ Configuration
+## ⚙️ Konfigurasi
 
-Edit these values in `index.js`:
+Edit nilai berikut di `index.js`:
 ```js
 let config = {
-  autoReadStatus: true,      // Auto read stories
-  autoLikeStatus: true,      // Auto react with emoji
-  downloadMediaStatus: true,  // Save media to device
-  sensorNomor: true,         // Hide phone numbers
-  SpeedReadStory: 2000,      // Delay between reads (ms)
+  autoReadStatus: true,      // Baca status otomatis
+  autoLikeStatus: true,      // Reaksi emoji otomatis
+  downloadMediaStatus: true,  // Simpan media ke perangkat
+  sensorNomor: true,         // Sembunyikan nomor telepon
+  SpeedReadStory: 2000,      // Jeda antar baca (ms)
+  customEmoji: "❤️,👍,🔥,✨", // Emoji yang digunakan
+  saveStats: true,           // Simpan statistik
+  notifyOnline: true,        // Notifikasi online
+  autoReply: false,          // Balas otomatis
+  autoReplyMsg: "Terima kasih telah berbagi status! 😊", // Pesan balasan
+  logLevel: "info"           // Level log (info/debug/error)
 }
 ```
+
+### 🎯 Tombol Pintasan
+<div align="center">
+  <a href="#" style="display:inline-block;background:#4CAF50;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;margin:5px;">
+    🚀 Mulai Bot
+  </a>
+  <a href="#" style="display:inline-block;background:#2196F3;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;margin:5px;">
+    ⚙️ Pengaturan
+  </a>
+  <a href="#" style="display:inline-block;background:#FF9800;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;margin:5px;">
+    📊 Statistik
+  </a>
+  <a href="#" style="display:inline-block;background:#9C27B0;color:white;padding:10px 20px;text-decoration:none;border-radius:5px;margin:5px;">
+    💾 Backup Data
+  </a>
+</div>
 
 ## 🚀 Deployment Options
 
