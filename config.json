@@ -1,0 +1,50 @@
+
+{
+  "// Fitur Utama": "Pengaturan dasar bot WhatsApp",
+  "autoReadStatus": true,
+  "autoLikeStatus": true,
+  "downloadMediaStatus": false,
+  "sensorNomor": true,
+  "SpeedReadStory": 3000,
+
+  "// Pengaturan Panggilan": "Konfigurasi untuk panggilan masuk",
+  "autoRejectCall": false,
+
+  "// Pengaturan Tampilan": "Konfigurasi tampilan dan status bot",
+  "autoOnline": true,
+  "readReceipts": false,
+  "autoTyping": true,
+  "autoRecording": false,
+
+  "// Pengaturan Emoji": "Konfigurasi emoji yang digunakan",
+  "emojiFile": "Lengkap_Emojis",
+
+  "// Pengaturan Anti-Tag": "Konfigurasi untuk fitur anti-tag grup",
+  "antitagswv2": true,
+  "maxWarnings": 5,
+  "deleteMessages": true,
+  "kickEnabled": true,
+  "warningTimeout": 24,
+
+  
+
+  "// Pengaturan Filter": "Daftar nomor yang diblokir dan diizinkan",
+  "blackList": [],
+  "whiteList": [],
+
+  "// Penjelasan Fitur": {
+    "autoReadStatus": "Otomatis membaca status WhatsApp",
+    "autoLikeStatus": "Otomatis memberikan reaksi emoji pada status",
+    "downloadMediaStatus": "Mengunduh media dari status yang dilihat",
+    "sensorNomor": "Menyembunyikan sebagian nomor WhatsApp di log",
+    "SpeedReadStory": "Kecepatan membaca status dalam milidetik",
+    "autoRejectCall": "Otomatis menolak panggilan masuk",
+    "autoOnline": "Bot selalu terlihat online",
+    "readReceipts": "Mengaktifkan tanda centang biru",
+    "autoTyping": "Menampilkan status 'sedang mengetik'",
+    "autoRecording": "Menampilkan status 'sedang merekam'",
+    "emojiFile": "Pilihan file emoji (Lengkap_Emojis atau Costum_Emojis)",
+    "blackList": "Daftar nomor yang tidak akan dibaca statusnya",
+    "whiteList": "Daftar nomor yang diizinkan (jika kosong, semua diizinkan)"
+  }
+}
