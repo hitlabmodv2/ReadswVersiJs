@@ -8,28 +8,108 @@ const {
   downloadMediaMessage,
   jidNormalizedUser
 } = require("@whiskeysockets/baileys");
+
 const pino = require("pino");
 const readline = require('readline');
 const { Boom } = require("@hapi/boom");
 const fs = require('fs');
 const path = require('path');
 
-// Config and counters
-let config = {
-  autoReadStatus: true,
-  autoLikeStatus: true,
-  downloadMediaStatus: true,
-  sensorNomor: true,
-  SpeedReadStory: 2000,
-  autoRejectCall: true, // Pengaturan untuk menolak panggilan otomatis
-  autoOnline: true, // Selalu online
-  readReceipts: false, // Matikan read receipts (centang biru)
-  autoTyping: false,
-  autoRecording: true,
-  emojiFile: 'Lengkap_Emojis', // Pilih 'Lengkap_Emojis' atau 'Costum_Emojis'
-  blackList: [],
-  whiteList: []
-};
+// Anti-tag handler functions
+function loadWarningData() {
+  const warningFile = path.join(__dirname, 'DATA', 'tag_warnings.json');
+  try {
+    if (fs.existsSync(warningFile)) {
+      return JSON.parse(fs.readFileSync(warningFile, 'utf8'));
+    }
+  } catch (error) {
+    console.error('Error loading warning data:', error);
+  }
+  return {};
+}
+
+function saveWarningData(data) {
+  const warningFile = path.join(__dirname, 'DATA', 'tag_warnings.json');
+  try {
+    fs.writeFileSync(warningFile, JSON.stringify(data, null, 2));
+  } catch (error) {
+    console.error('Error saving warning data:', error);
+  }
+}
+
+async function handleAntiTagSW(sock, msg) {
+  if (!config.antitagswv2) return;
+
+  if (msg.message?.groupStatusMentionMessage) {
+    const groupId = msg.key.remoteJid;
+    const participant = msg.key.participant;
+
+    // Load warning data
+    const warningData = loadWarningData();
+    if (!warningData[groupId]) warningData[groupId] = {};
+    if (!warningData[groupId][participant]) warningData[groupId][participant] = 0;
+    warningData[groupId][participant]++;
+
+    // Reply to the message
+    await sock.sendMessage(participant, {
+      text: "⚠️ *PERINGATAN*\n\nMaaf, anda telah melakukan tag grup di status. Mohon untuk tidak mengulanginya lagi.\n\nJika anda mengulanginya, akan diberikan sanksi sesuai ketentuan grup."
+    });
+
+    try {
+      const groupMetadata = await sock.groupMetadata(groupId);
+      const groupName = groupMetadata.subject;
+      const warnings = warningData[groupId][participant];
+
+      // Delete message
+      if (config.deleteMessages) {
+        await sock.sendMessage(groupId, { delete: msg.key });
+      }
+
+      // Send warning
+      if (warnings <= config.maxWarnings) {
+        // Get user profile picture
+        let ppuser;
+        try {
+          ppuser = await sock.profilePictureUrl(participant, 'image');
+        } catch {
+          ppuser = 'https://i.ibb.co/T8JgL6m/avatar-contact.png'; // Default avatar if no profile picture
+        }
+
+        await sock.sendMessage(groupId, {
+          image: { url: ppuser },
+          caption: `⚠️ *Anti-Tag Warning ${warnings}/${config.maxWarnings}*\n\n@${participant.split('@')[0]} dilarang tag grup di status!\n\nGroup: ${groupName}`,
+          mentions: [participant]
+        }, {
+          quoted: msg
+        });
+      }
+
+      // Kick if max warnings reached
+      if (warnings >= config.maxWarnings && config.kickEnabled) {
+        const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net';
+        const isAdmin = groupMetadata.participants.some(p => p.id === botNumber && p.admin);
+
+        if (isAdmin) {
+          await sock.groupParticipantsUpdate(groupId, [participant], 'remove');
+          delete warningData[groupId][participant];
+        }
+      }
+
+      saveWarningData(warningData);
+    } catch (error) {
+      console.error('Error handling anti-tag:', error);
+    }
+  }
+}
+
+// Load config from JSON file
+let config;
+try {
+  config = require('./config.json');
+} catch (error) {
+  console.error('Error loading config:', error);
+  process.exit(1);
+}
 
 let totalViewed = 0;
 
@@ -164,22 +244,27 @@ async function handleStatusUpdate(sock, msg, logCuy) {
         return "🌜 Malam";
       };
 
-      console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log("  🤖 BOT AUTO LIHAT STATUS WHATSAPP");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-      console.log(`  ⟫ Status Bot        : Aktif ✓`);
-      console.log(`  ⟫ ⏰ Sesi           : ${getTimeSession()}`);
-      console.log(`  ⟫ 📅 Tanggal        : ${formattedDate}`);
-      console.log(`  ⟫ 🕐 Waktu          : ${formattedTime}`);
-      console.log(`  ⟫ Kecepatan Lihat   : ${config.SpeedReadStory/1000} Detik`);
-      console.log(`  ⟫ Total Dilihat     : ${totalViewed}`);
-      console.log(`  ⟫ Dilihat Kontak    : ${contactViews}`);
-      console.log(`  ⟫ Nama Kontak       : ${senderName}`);
-      console.log(`  ⟫ Nomor Kontak      : ${displaySendernumber}`);
-      console.log(`  ⟫ Tipe Status       : ${statusType}`);
-      console.log(`  ⟫ Reaksi Diberikan  : ${randomEmoji}`);
-      console.log(`  ⟫ Status            : ${config.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat"}`);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+      console.log(textColors.cyan + "\n├─────────────────");
+      console.log(textColors.cyan + "│" + textColors.yellow + "🤖 BOT AUTO LIHAT STATUS WHATSAPP");
+      console.log(textColors.cyan + "├─────────────────");
+      console.log(textColors.cyan + "│" + textColors.magenta + "📊 Info System");
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Status Bot      : " + textColors.green + "Aktif ✓");
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " ⏰ Sesi         : " + textColors.yellow + getTimeSession());
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " 📅 Tanggal      : " + textColors.blue + formattedDate);
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " 🕐 Waktu        : " + textColors.blue + formattedTime);
+      console.log(textColors.cyan + "├─────────────────");
+      console.log(textColors.cyan + "│" + textColors.magenta + "📱 Info Status");
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Kecepatan Lihat : " + textColors.yellow + config.SpeedReadStory/1000 + " Detik");
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Total Dilihat   : " + textColors.green + totalViewed);
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Dilihat Kontak  : " + textColors.green + contactViews);
+      console.log(textColors.cyan + "├─────────────────");
+      console.log(textColors.cyan + "│" + textColors.magenta + "👤 Info Kontak");
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Nama            : " + textColors.yellow + senderName);
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Nomor           : " + textColors.yellow + displaySendernumber);
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Tipe Status     : " + textColors.blue + statusType);
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Reaksi          : " + randomEmoji);
+      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Status          : " + textColors.green + (config.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat"));
+      console.log(textColors.cyan + "└─────────────────" + reset);
 
       if (config.downloadMediaStatus && (msg.message?.imageMessage || msg.message?.videoMessage || msg.message?.audioMessage)) {
         try {
@@ -206,7 +291,7 @@ const rl = readline.createInterface({ input: process.stdin, output: process.stdo
 const question = (text) => new Promise((resolve) => rl.question(text, resolve));
 
 async function WAStart() {
-  const { state, saveCreds } = await useMultiFileAuthState("./sesi");
+  const { state, saveCreds } = await useMultiFileAuthState("./session");
   const { version, isLatest } = await fetchLatestWaWebVersion().catch(() => fetchLatestBaileysVersion());
 
   // Ensure DATA directory exists
@@ -347,6 +432,15 @@ async function WAStart() {
       }
 
       await handleStatusUpdate(client, m, console.log);
+      await handleAntiTagSW(client, m);
+      
+      // Handle Hoshino AI responses
+      const { handleMessage } = require('./FITUR_WILY/AiHoshinoTakanashi.js');
+      await handleMessage(m, client);
+
+      // Handle sticker creation
+      const { stickerHandler } = require('./FITUR_WILY/sticker.js');
+      await stickerHandler(m, client);
     } catch (err) {
       console.log(err);
     }
@@ -442,7 +536,22 @@ async function WAStart() {
 
   client.ev.on("creds.update", saveCreds);
 
+  // Register the message handler
+  client.ev.on("messages.upsert", async ({ messages }) => {
+    const msg = messages[0];
+    await messageHandler(msg, client);
+  });
+
   return client;
 }
 
 WAStart();
+
+// Message handler
+// Initialize messageTimers map for cooldown
+const messageTimers = new Map();
+
+async function messageHandler(msg, sock) {
+  // Empty message handler since we removed all commands
+  return;
+}
