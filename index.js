@@ -244,27 +244,20 @@ async function handleStatusUpdate(sock, msg, logCuy) {
         return "🌜 Malam";
       };
 
-      console.log(textColors.cyan + "\n├─────────────────");
-      console.log(textColors.cyan + "│" + textColors.yellow + "🤖 BOT AUTO LIHAT STATUS WHATSAPP");
-      console.log(textColors.cyan + "├─────────────────");
-      console.log(textColors.cyan + "│" + textColors.magenta + "📊 Info System");
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Status Bot      : " + textColors.green + "Aktif ✓");
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " ⏰ Sesi         : " + textColors.yellow + getTimeSession());
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " 📅 Tanggal      : " + textColors.blue + formattedDate);
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " 🕐 Waktu        : " + textColors.blue + formattedTime);
-      console.log(textColors.cyan + "├─────────────────");
-      console.log(textColors.cyan + "│" + textColors.magenta + "📱 Info Status");
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Kecepatan Lihat : " + textColors.yellow + config.SpeedReadStory/1000 + " Detik");
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Total Dilihat   : " + textColors.green + totalViewed);
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Dilihat Kontak  : " + textColors.green + contactViews);
-      console.log(textColors.cyan + "├─────────────────");
-      console.log(textColors.cyan + "│" + textColors.magenta + "👤 Info Kontak");
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Nama            : " + textColors.yellow + senderName);
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Nomor           : " + textColors.yellow + displaySendernumber);
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Tipe Status     : " + textColors.blue + statusType);
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Reaksi          : " + randomEmoji);
-      console.log(textColors.cyan + "│ ⟫" + textColors.white + " Status          : " + textColors.green + (config.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat"));
-      console.log(textColors.cyan + "└─────────────────" + reset);
+      console.log(textColors.cyan + "\n~> [ ▧ Status Update ]");
+      console.log(textColors.cyan + "│ »" + textColors.white + " Status Bot    : " + textColors.green + "Aktif ✓");
+      console.log(textColors.cyan + "│ »" + textColors.white + " Sesi         : " + textColors.yellow + getTimeSession());
+      console.log(textColors.cyan + "│ »" + textColors.white + " Tanggal      : " + textColors.blue + formattedDate);
+      console.log(textColors.cyan + "│ »" + textColors.white + " Waktu        : " + textColors.blue + formattedTime + " WIB");
+      console.log(textColors.cyan + "│ »" + textColors.white + " Speed Read    : " + textColors.yellow + config.SpeedReadStory/1000 + " Detik");
+      console.log(textColors.cyan + "│ »" + textColors.white + " Total Views   : " + textColors.green + totalViewed);
+      console.log(textColors.cyan + "│ »" + textColors.white + " Contact Views : " + textColors.green + contactViews);
+      console.log(textColors.cyan + "│ »" + textColors.white + " Nama         : " + textColors.yellow + senderName);
+      console.log(textColors.cyan + "│ »" + textColors.white + " Nomor        : " + textColors.yellow + displaySendernumber);
+      console.log(textColors.cyan + "│ »" + textColors.white + " Tipe Status  : " + textColors.blue + statusType);
+      console.log(textColors.cyan + "│ »" + textColors.white + " Reaksi       : " + randomEmoji);
+      console.log(textColors.cyan + "│ »" + textColors.white + " Status       : " + textColors.green + (config.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat"));
+      console.log(textColors.cyan + "└───···" + reset);
 
       if (config.downloadMediaStatus && (msg.message?.imageMessage || msg.message?.videoMessage || msg.message?.audioMessage)) {
         try {
