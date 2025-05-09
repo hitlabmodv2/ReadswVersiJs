@@ -1,38 +1,44 @@
 
 {
-  "// Fitur Utama": "Pengaturan dasar bot WhatsApp",
+  "// Bot Features": "Main WhatsApp bot configuration",
+  "aiHoshino": {
+    "enabled": true,
+    "cooldownTime": 5000
+  },
   "autoReadStatus": true,
   "autoLikeStatus": true,
   "downloadMediaStatus": false,
   "sensorNomor": true,
   "SpeedReadStory": 3000,
 
-  "// Pengaturan Panggilan": "Konfigurasi untuk panggilan masuk",
+  "// Call Settings": "Call handling configuration",
   "autoRejectCall": false,
 
-  "// Pengaturan Tampilan": "Konfigurasi tampilan dan status bot",
+  "// Display Settings": "Bot display and status configuration", 
   "autoOnline": true,
   "readReceipts": false,
   "autoTyping": true,
   "autoRecording": false,
 
-  "// Pengaturan Emoji": "Konfigurasi emoji yang digunakan",
+  "// Emoji Settings": "Emoji configuration",
   "emojiFile": "Lengkap_Emojis",
 
-  "// Pengaturan Anti-Tag": "Konfigurasi untuk fitur anti-tag grup",
+  "// Anti-Tag Settings": "Group anti-tag feature configuration",
   "antitagswv2": true,
   "maxWarnings": 5,
   "deleteMessages": true,
   "kickEnabled": true,
   "warningTimeout": 24,
 
-  
-
-  "// Pengaturan Filter": "Daftar nomor yang diblokir dan diizinkan",
+  "// Filter Settings": "Blocked and allowed numbers configuration",
   "blackList": [],
   "whiteList": [],
 
-  "// Penjelasan Fitur": {
+  "// Feature Descriptions": {
+    "aiHoshino": {
+      "enabled": "Mengaktifkan/menonaktifkan fitur AI chat",
+      "cooldownTime": "Waktu jeda antara respon AI dalam milidetik"
+    },
     "autoReadStatus": "Otomatis membaca status WhatsApp",
     "autoLikeStatus": "Otomatis memberikan reaksi emoji pada status",
     "downloadMediaStatus": "Mengunduh media dari status yang dilihat",
@@ -44,7 +50,12 @@
     "autoTyping": "Menampilkan status 'sedang mengetik'",
     "autoRecording": "Menampilkan status 'sedang merekam'",
     "emojiFile": "Pilihan file emoji (Lengkap_Emojis atau Costum_Emojis)",
-    "blackList": "Daftar nomor yang tidak akan dibaca statusnya",
+    "antitagswv2": "Fitur anti-tag di grup",
+    "maxWarnings": "Jumlah maksimal peringatan sebelum tindakan",
+    "deleteMessages": "Hapus pesan yang melanggar",
+    "kickEnabled": "Izinkan bot untuk mengeluarkan anggota",
+    "warningTimeout": "Durasi peringatan dalam jam",
+    "blackList": "Daftar nomor yang diblokir",
     "whiteList": "Daftar nomor yang diizinkan (jika kosong, semua diizinkan)"
   }
 }
