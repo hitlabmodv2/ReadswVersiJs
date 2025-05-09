@@ -37,6 +37,9 @@ const COOLDOWN_TIME = 5000; // 5 detik cooldown
 
 async function handleMessage(msg, sock) {
   try {
+    // Check if AI feature is enabled in config
+    const config = require('../config.json');
+    if (!config.aiHoshino?.enabled) return;
     // Get message content from various types
     const messageContent = msg.message?.conversation || 
                          msg.message?.extendedTextMessage?.text ||
