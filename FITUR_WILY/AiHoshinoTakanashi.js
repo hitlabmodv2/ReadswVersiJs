@@ -37,9 +37,9 @@ const COOLDOWN_TIME = 5000; // 5 detik cooldown
 
 async function handleMessage(msg, sock) {
   try {
-    // Check if AI feature is enabled in config
-    const config = require('../config.json');
-    if (!config.aiHoshino?.enabled) return;
+    // Check if AI feature is enabled in settings
+    const { botConfig: settings } = require('../settings.js');
+    if (!settings.aiHoshino?.enabled) return;
     // Get message content from various types
     const messageContent = msg.message?.conversation || 
                          msg.message?.extendedTextMessage?.text ||
@@ -72,8 +72,8 @@ async function handleMessage(msg, sock) {
 
     // Get response and send message
     const response = await getHoshinoResponse(messageContent);
-    const senderName = msg.pushName || 'User';
-    const mention = `@${sender.split('@')[0]}`;
+    const senderName = msg.pushName || sender.split('@')[0];
+    const mention = senderName;
 
     // Array of image URLs
     const images = [
@@ -88,12 +88,34 @@ async function handleMessage(msg, sock) {
 
     const randomImage = images[Math.floor(Math.random() * images.length)];
 
-    await sock.sendMessage(msg.key.remoteJid, {
-      image: { url: randomImage },
-      caption: `${mention} ${response}`,
-      mentions: [sender],
-      quoted: msg
-    });
+    // Custom reply function
+    async function ReplyRynzz(teks) {
+      const nedd = {      
+        contextInfo: {
+          forwardingScore: 999,
+          isForwarded: true,
+          forwardedNewsletterMessageInfo: {
+            newsletterName: "Hoshino Bot",
+            newsletterJid: sender,
+          },
+          externalAdReply: {  
+            showAdAttribution: true,
+            title: new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}),
+            body: "Hoshino Takanashi",
+            previewType: "IMAGE",
+            thumbnailUrl: randomImage,
+            sourceUrl: `https://wa.me/${sender.split('@')[0]}`,
+          },
+        },
+        text: teks,
+      };
+      return sock.sendMessage(msg.key.remoteJid, nedd, {
+        quoted: msg,
+      });
+    }
+
+    // Send response using custom reply
+    await ReplyRynzz(`${mention} ${response}`);
 
   } catch (error) {
     console.error('Error in handleMessage:', error);
