@@ -1,15 +1,26 @@
 const axios = require('axios');
 
-async function getHoshinoResponse(text) {
+async function getCharacterResponse(character, text) {
   try {
     if (!text || text.trim() === '') {
-      return "Maaf, aku tidak mengerti pesanmu. Bisa tolong kirim pesan yang lebih jelas?";
+      return "*⚠️ System Notice*\n\nMaaf, aku tidak mengerti pesanmu. Bisa tolong kirim pesan yang lebih jelas?";
     }
 
-    const response = await axios.get(`https://api.nekorinn.my.id/character-ai/hoshino-takanashi`, {
+    const endpoints = {
+      hoshino: 'hoshino-takanashi',
+      hiura: 'hiura-mihate',
+      hitori: 'hitori-gotoh'
+    };
+
+    const endpoint = endpoints[character];
+    if (!endpoint) {
+      return "*❌ System Error*\n\nCharacter tidak tersedia";
+    }
+
+    const response = await axios.get(`https://api.nekorinn.my.id/character-ai/${endpoint}`, {
       params: {
         text: text.trim(),
-        sessionid: 'HoshinoTakanashi'
+        sessionid: character.charAt(0).toUpperCase() + character.slice(1)
       },
       timeout: 10000,
       retry: 3,
@@ -17,30 +28,74 @@ async function getHoshinoResponse(text) {
     });
 
     if (response.data.status && response.data.result) {
-      return response.data.result;
+      // Add bold formatting to text inside parentheses
+      const formattedResponse = response.data.result.replace(/\((.*?)\)/g, '*(($1))*');
+      return formattedResponse;
     }
 
     if (response.data.error) {
-      console.log('API Error:', response.data.error);
-      return "Gomen ne, sepertinya ada masalah dengan sistemku...";
+      console.log('*🔴 API Error:*\n', response.data.error);
+      return "*⚠️ System Notice*\n\nGomen ne, sepertinya ada masalah dengan sistemku...";
     }
 
-    return "Maaf, aku sedang tidak bisa merespon sekarang...";
+    return "*⚠️ System Notice*\n\nMaaf, aku sedang tidak bisa merespon sekarang...";
   } catch (error) {
-    console.error('Error in getHoshinoResponse:', error);
-    return "Gomen ne, sepertinya ada masalah dengan sistemku...";
+    console.error('*❌ Error in getCharacterResponse:*\n', error);
+    return "*⚠️ System Notice*\n\nGomen ne, sepertinya ada masalah dengan sistemku...";
   }
 }
 
-const messageTimers = new Map();
+const messageCache = new Map();
 const COOLDOWN_TIME = 5000; // 5 detik cooldown
+const SPAM_TIMEOUT = 30000; // 30 detik timeout untuk spam
+
+const characterErrors = {
+  hoshino: '*⚠️ System Notice*\n\nGomen ne~ Hanya bisa mengaktifkan satu karakter AI saja. Mohon tunggu sebentar ya...',
+  hiura: '*⚠️ System Notice*\n\nSumimasen! Mohon jangan spam pesan. Silakan tunggu beberapa saat...',
+  hitori: '*⚠️ System Notice*\n\nAh... sepertinya kamu terlalu cepat mengirim pesan. Mohon tunggu sebentar~'
+};
+
+function isSpamming(sender) {
+  const now = Date.now();
+  const lastMsg = messageCache.get(sender) || 0;
+
+  if (now - lastMsg < COOLDOWN_TIME) {
+    return true;
+  }
+
+  messageCache.set(sender, now);
+  return false;
+}
 
 async function handleMessage(msg, sock) {
   try {
-    // Check if AI feature is enabled in settings
     const { botConfig: settings } = require('../settings.js');
-    if (!settings.aiHoshino?.enabled) return;
-    // Get message content from various types
+
+    const enabledCharacters = Object.entries(settings.aiCharacters)
+      .filter(([_, config]) => config.enabled);
+
+    if (enabledCharacters.length === 0) return;
+
+    if (enabledCharacters.length > 1) {
+      const [firstChar] = enabledCharacters;
+      const sender = msg.key.participant || msg.key.remoteJid;
+
+      if (isSpamming(sender)) {
+        return;
+      }
+
+      const errorMsg = characterErrors[firstChar[0]] || "*⚠️ System Notice*\n\nMaaf, hanya satu karakter AI yang dapat aktif pada satu waktu.";
+      const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net';
+      const isGroup = msg.key.remoteJid.endsWith('@g.us');
+
+      if (!isGroup || (isGroup && (msg.message?.extendedTextMessage?.contextInfo?.mentionedJid?.includes(botNumber) || 
+          msg.message?.extendedTextMessage?.contextInfo?.participant === botNumber))) {
+        await sock.sendMessage(msg.key.remoteJid, { text: errorMsg });
+        return;
+      }
+      return;
+    }
+
     const messageContent = msg.message?.conversation || 
                          msg.message?.extendedTextMessage?.text ||
                          msg.message?.imageMessage?.caption ||
@@ -52,56 +107,39 @@ async function handleMessage(msg, sock) {
     const sender = msg.key.participant || msg.key.remoteJid;
     const isGroup = msg.key.remoteJid.endsWith('@g.us');
 
-    // Check if message mentions bot or is reply to bot
     const mentionedJid = msg.message?.extendedTextMessage?.contextInfo?.mentionedJid || [];
     const quotedMessage = msg.message?.extendedTextMessage?.contextInfo;
     const isReplyToBot = quotedMessage?.participant === botNumber;
     const isBotMentioned = mentionedJid.includes(botNumber);
 
-    // Handle group messages
-    if (isGroup) {
-      // Only respond if bot is mentioned or message is reply to bot
-      if (!isBotMentioned && !isReplyToBot) return;
-    }
+    if (isGroup && !isBotMentioned && !isReplyToBot) return;
 
-    // Check cooldown
     const now = Date.now();
-    const lastMessageTime = messageTimers.get(sender) || 0;
+    const lastMessageTime = messageCache.get(sender) || 0;
     if (now - lastMessageTime < COOLDOWN_TIME) return;
-    messageTimers.set(sender, now);
+    messageCache.set(sender, now);
 
-    // Get response and send message
-    const response = await getHoshinoResponse(messageContent);
+    const [characterName, characterConfig] = enabledCharacters[Math.floor(Math.random() * enabledCharacters.length)];
+    const response = await getCharacterResponse(characterName, messageContent);
     const senderName = msg.pushName || sender.split('@')[0];
-    const mention = senderName;
+    const mention = `*👤 ${senderName}*`;
 
-    // Array of image URLs
-    const images = [
-      'https://files.catbox.moe/lza1uc.jpg',
-      'https://files.catbox.moe/dz3l1w.jpg',
-      'https://files.catbox.moe/0g66xr.jpg',
-      'https://files.catbox.moe/8i4bin.jpg',
-      'https://files.catbox.moe/2a8jkm.jpg',
-      'https://files.catbox.moe/owmntz.jpg',
-      'https://files.catbox.moe/hq3irj.jpg'
-    ];
-
+    const images = characterConfig.images;
     const randomImage = images[Math.floor(Math.random() * images.length)];
 
-    // Custom reply function
     async function ReplyRynzz(teks) {
       const nedd = {      
         contextInfo: {
           forwardingScore: 999,
           isForwarded: true,
           forwardedNewsletterMessageInfo: {
-            newsletterName: "Hoshino Bot",
+            newsletterName: `*${characterName.charAt(0).toUpperCase() + characterName.slice(1)}*`,
             newsletterJid: sender,
           },
           externalAdReply: {  
             showAdAttribution: true,
-            title: new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'}),
-            body: "Hoshino Takanashi",
+            title: `*📅 ${new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'})}*`,
+            body: `*${characterName.charAt(0).toUpperCase() + characterName.slice(1)}*`,
             previewType: "IMAGE",
             thumbnailUrl: randomImage,
             sourceUrl: `https://wa.me/${sender.split('@')[0]}`,
@@ -114,11 +152,10 @@ async function handleMessage(msg, sock) {
       });
     }
 
-    // Send response using custom reply
-    await ReplyRynzz(`${mention} ${response}`);
+    await ReplyRynzz(`${mention}\n\n${response}`);
 
   } catch (error) {
-    console.error('Error in handleMessage:', error);
+    console.error('*❌ Error in handleMessage:*\n', error);
   }
 }
 
