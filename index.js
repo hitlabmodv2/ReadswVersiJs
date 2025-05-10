@@ -426,8 +426,16 @@ async function WAStart() {
       await handleAntiTagSW(client, m);
 
       // Handle Hoshino AI responses
-      const { handleMessage } = require('./FITUR_WILY/AiHoshinoTakanashi.js');
-      await handleMessage(m, client);
+      const { handleMessage: hoshinoHandler } = require('./FITUR_WILY/AiHoshinoTakanashi.js');
+      const { getLuminaResponse } = require('./FITUR_WILY/AiLumina.js');
+      
+      await hoshinoHandler(m, client);
+      
+      // Handle Lumina AI responses
+      if (!m.key.fromMe && (m.message?.conversation || m.message?.extendedTextMessage?.text)) {
+        const text = m.message?.conversation || m.message?.extendedTextMessage?.text;
+        await getLuminaResponse(text, m, client);
+      }
 
       // Handle sticker creation
       const { stickerHandler } = require('./FITUR_WILY/sticker.js');
