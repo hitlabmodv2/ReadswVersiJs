@@ -9,6 +9,8 @@ const {
   jidNormalizedUser
 } = require("@whiskeysockets/baileys");
 
+const { botConfig: settings } = require('./settings.js');
+
 const pino = require("pino");
 const readline = require('readline');
 const { Boom } = require("@hapi/boom");
@@ -38,7 +40,7 @@ function saveWarningData(data) {
 }
 
 async function handleAntiTagSW(sock, msg) {
-  if (!config.antitagswv2) return;
+  if (!settings.antitagswv2) return;
 
   if (msg.message?.groupStatusMentionMessage) {
     const groupId = msg.key.remoteJid;
@@ -61,12 +63,12 @@ async function handleAntiTagSW(sock, msg) {
       const warnings = warningData[groupId][participant];
 
       // Delete message
-      if (config.deleteMessages) {
+      if (settings.deleteMessages) {
         await sock.sendMessage(groupId, { delete: msg.key });
       }
 
       // Send warning
-      if (warnings <= config.maxWarnings) {
+      if (warnings <= settings.maxWarnings) {
         // Get user profile picture
         let ppuser;
         try {
@@ -77,7 +79,7 @@ async function handleAntiTagSW(sock, msg) {
 
         await sock.sendMessage(groupId, {
           image: { url: ppuser },
-          caption: `⚠️ *Anti-Tag Warning ${warnings}/${config.maxWarnings}*\n\n@${participant.split('@')[0]} dilarang tag grup di status!\n\nGroup: ${groupName}`,
+          caption: `⚠️ *Anti-Tag Warning ${warnings}/${settings.maxWarnings}*\n\n@${participant.split('@')[0]} dilarang tag grup di status!\n\nGroup: ${groupName}`,
           mentions: [participant]
         }, {
           quoted: msg
@@ -85,7 +87,7 @@ async function handleAntiTagSW(sock, msg) {
       }
 
       // Kick if max warnings reached
-      if (warnings >= config.maxWarnings && config.kickEnabled) {
+      if (warnings >= settings.maxWarnings && settings.kickEnabled) {
         const botNumber = sock.user.id.split(':')[0] + '@s.whatsapp.net';
         const isAdmin = groupMetadata.participants.some(p => p.id === botNumber && p.admin);
 
@@ -102,14 +104,8 @@ async function handleAntiTagSW(sock, msg) {
   }
 }
 
-// Load config from JSON file
-let config;
-try {
-  config = require('./config.json');
-} catch (error) {
-  console.error('Error loading config:', error);
-  process.exit(1);
-}
+// Load settings
+//const { botsettings: settings } = require('./settings.js');
 
 let totalViewed = 0;
 
@@ -165,34 +161,34 @@ async function handleStatusUpdate(sock, msg, logCuy) {
     }
 
     if (msg.key.remoteJid === "status@broadcast" && msg.key.participant) {
-      if (!config.autoReadStatus) return;
+      if (!settings.autoReadStatus) return;
 
       let senderNumber = msg.key.participant.split("@")[0];
-      let displaySendernumber = config.sensorNomor ? 
+      let displaySendernumber = settings.sensorNomor ? 
         senderNumber.slice(0, 3) + "****" + senderNumber.slice(-2) : 
         senderNumber;
       const senderName = msg.pushName || "Tidak diketahui";
 
       if (msg.message?.protocolMessage || msg.message?.reactionMessage) return;
 
-      if (config.blackList.includes(senderNumber)) {
+      if (settings.blackList.includes(senderNumber)) {
         console.log(`${senderName} (${displaySendernumber}) dalam blacklist, diabaikan`);
         return;
       }
 
-      if (config.whiteList.length > 0 && !config.whiteList.includes(senderNumber)) {
+      if (settings.whiteList.length > 0 && !settings.whiteList.includes(senderNumber)) {
         console.log(`${senderName} (${displaySendernumber}) tidak dalam whitelist, diabaikan`);
         return;
       }
 
-      const emojis = require(`./KUMPULAN_EMOJI/${config.emojiFile}.js`);
+      const emojis = require(`./KUMPULAN_EMOJI/${settings.emojiFile}.js`);
       const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
       const myself = jidNormalizedUser(sock.user.id);
 
-      await new Promise(resolve => setTimeout(resolve, config.SpeedReadStory));
+      await new Promise(resolve => setTimeout(resolve, settings.SpeedReadStory));
       await sock.readMessages([msg.key]);
 
-      if (config.autoLikeStatus) {
+      if (settings.autoLikeStatus) {
         try {
           await sock.sendMessage(
             msg.key.remoteJid,
@@ -244,22 +240,24 @@ async function handleStatusUpdate(sock, msg, logCuy) {
         return "🌜 Malam";
       };
 
-      console.log(textColors.cyan + "\n~> [ ▧ Status Update ]");
-      console.log(textColors.cyan + "│ »" + textColors.white + " Status Bot    : " + textColors.green + "Aktif ✓");
-      console.log(textColors.cyan + "│ »" + textColors.white + " Sesi         : " + textColors.yellow + getTimeSession());
-      console.log(textColors.cyan + "│ »" + textColors.white + " Tanggal      : " + textColors.blue + formattedDate);
-      console.log(textColors.cyan + "│ »" + textColors.white + " Waktu        : " + textColors.blue + formattedTime + " WIB");
-      console.log(textColors.cyan + "│ »" + textColors.white + " Speed Read    : " + textColors.yellow + config.SpeedReadStory/1000 + " Detik");
-      console.log(textColors.cyan + "│ »" + textColors.white + " Total Views   : " + textColors.green + totalViewed);
-      console.log(textColors.cyan + "│ »" + textColors.white + " Contact Views : " + textColors.green + contactViews);
-      console.log(textColors.cyan + "│ »" + textColors.white + " Nama         : " + textColors.yellow + senderName);
-      console.log(textColors.cyan + "│ »" + textColors.white + " Nomor        : " + textColors.yellow + displaySendernumber);
-      console.log(textColors.cyan + "│ »" + textColors.white + " Tipe Status  : " + textColors.blue + statusType);
-      console.log(textColors.cyan + "│ »" + textColors.white + " Reaksi       : " + randomEmoji);
-      console.log(textColors.cyan + "│ »" + textColors.white + " Status       : " + textColors.green + (config.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat"));
-      console.log(textColors.cyan + "└───···" + reset);
+      // Handle status updates  
+      console.log("\n" + bgColors.blue + textColors.white + " 💌 pesan masuk..." + reset);
+      console.log("~> [ ▧ Status Update ]");
+      console.log("│ » Status Bot    : " + textColors.green + "Aktif ✓" + reset);
+      console.log("│ » Sesi         : " + textColors.yellow + getTimeSession() + reset);
+      console.log("│ » Tanggal      : " + textColors.blue + formattedDate + reset);
+      console.log("│ » Waktu        : " + textColors.blue + formattedTime + " WIB" + reset);
+      console.log("│ » Speed Read    : " + textColors.yellow + settings.SpeedReadStory/1000 + " Detik" + reset);
+      console.log("│ » Total Views   : " + textColors.green + totalViewed + reset);
+      console.log("│ » Contact Views : " + textColors.green + contactViews + reset);
+      console.log("│ » Nama         : " + textColors.yellow + senderName + reset);
+      console.log("│ » Nomor        : " + textColors.yellow + displaySendernumber + reset);
+      console.log("│ » Tipe Status  : " + textColors.blue + statusType + reset);
+      console.log("│ » Reaksi       : " + randomEmoji);
+      console.log("│ » Status       : " + textColors.green + (settings.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat") + reset);
+      console.log("└───···");
 
-      if (config.downloadMediaStatus && (msg.message?.imageMessage || msg.message?.videoMessage || msg.message?.audioMessage)) {
+      if (settings.downloadMediaStatus && (msg.message?.imageMessage || msg.message?.videoMessage || msg.message?.audioMessage)) {
         try {
           const buffer = await downloadMediaMessage(msg, "buffer", {}, { logger: pino({ level: "silent" }) });
           const mediaType = msg.message.imageMessage ? "image" : 
@@ -336,8 +334,8 @@ async function WAStart() {
     browser: Browsers.ubuntu("Chrome"),
     auth: state,
     version: version,
-    markOnlineOnConnect: config.autoOnline,
-    readReceipts: config.readReceipts,
+    markOnlineOnConnect: settings.autoOnline,
+    readReceipts: settings.readReceipts,
     browserDescription: ["BOT", "Chrome", "3.0"],
     connectTimeoutMs: 60000,
     keepAliveIntervalMs: 10000,
@@ -407,7 +405,7 @@ async function WAStart() {
 
       // Auto typing dan recording
       if (chat) {
-        if (config.autoTyping) {
+        if (settings.autoTyping) {
           await client.presenceSubscribe(chat);
           await client.sendPresenceUpdate('composing', chat);
           setTimeout(async () => {
@@ -415,7 +413,7 @@ async function WAStart() {
           }, 10000);
         }
 
-        if (config.autoRecording) {
+        if (settings.autoRecording) {
           await client.presenceSubscribe(chat);
           await client.sendPresenceUpdate('recording', chat);
           setTimeout(async () => {
@@ -426,7 +424,7 @@ async function WAStart() {
 
       await handleStatusUpdate(client, m, console.log);
       await handleAntiTagSW(client, m);
-      
+
       // Handle Hoshino AI responses
       const { handleMessage } = require('./FITUR_WILY/AiHoshinoTakanashi.js');
       await handleMessage(m, client);
@@ -443,7 +441,7 @@ async function WAStart() {
   client.ev.on("call", async (node) => {
     const calls = Array.isArray(node) ? node : [node];
     for (const call of calls) {
-      if (call.status === "offer" && config.autoRejectCall) {
+      if (call.status === "offer" && settings.autoRejectCall) {
         try {
           await client.rejectCall(call.id, call.from);
           const caller = call.from.split('@')[0];
@@ -466,6 +464,7 @@ async function WAStart() {
 
   client.ev.on("connection.update", async (update) => {
     const { connection, lastDisconnect, qr } = update;
+    //const { botsettings: settings } = require('./settings.js');
 
     if(qr) {
       // QR code disabled, using pairing code only
@@ -514,37 +513,59 @@ async function WAStart() {
         WAStart();
       }
     } else if (connection === "open") {
-      console.log("➜ WhatsApp Status Bot ⚡");
-      console.log("━━━━━━━━━━━━━━━━━━━━━━");
-      console.log(`📱 Bot Version   : v${version.join(".")}`);
-      console.log(`✨ Latest        : ${isLatest}`);
-      console.log(`👁️  Read Story    : ${savedData.total}`);
-      console.log(`⏰ Sesi          : ${getTimeSession()}`);
-      console.log(`🟢 Status        : Connected`);
-      console.log(`📅 Tanggal       : ${formattedDate}`);
-      console.log(`🕐 Waktu         : ${formattedTime}`);
-      console.log("━━━━━━━━━━━━━━━━━━━━━━\n");
+      console.clear();
+      console.log(textColors.cyan + "╭──────────────────────────────╮");
+      console.log(textColors.cyan + "│    " + textColors.yellow + "➜ WhatsApp Status Bot ⚡" + textColors.cyan + "    │");
+      console.log(textColors.cyan + "├──────────────────────────────┤");
+      console.log(textColors.cyan + "│ " + textColors.white + `📱 Bot Version : v${version.join(".")}` + textColors.cyan + "   │");
+      console.log(textColors.cyan + "│ " + textColors.white + `✨ Latest      : ${isLatest}` + textColors.cyan + "      │");
+      console.log(textColors.cyan + "│ " + textColors.white + `👁️  Read Story  : ${savedData.total}` + textColors.cyan + "       │");
+      console.log(textColors.cyan + "│ " + textColors.white + `⏰ Sesi        : ${getTimeSession()}` + textColors.cyan + "  │");
+      console.log(textColors.cyan + "│ " + textColors.green + `🟢 Status      : Connected` + textColors.cyan + "    │");
+      console.log(textColors.cyan + "│ " + textColors.white + `📅 Tanggal     : ${formattedDate}` + textColors.cyan + " │");
+      console.log(textColors.cyan + "│ " + textColors.white + `🕐 Waktu       : ${formattedTime}` + textColors.cyan + "    │");
+      console.log(textColors.cyan + "╰──────────────────────────────╯\n");
+
+      // Waiting message animation
+      let dots = "";
+      const waitingInterval = setInterval(() => {
+        process.stdout.write(`\r${bgColors.blue}${textColors.white} 💬 Menunggu pesan masuk${dots}${" ".repeat(4)}${reset}`);
+        dots = dots.length >= 3 ? "" : dots + ".";
+      }, 500);
+
+      // Store interval to clear it when message arrives
+      global.waitingAnimation = waitingInterval;
     }
   });
 
   client.ev.on("creds.update", saveCreds);
 
   // Register the message handler
-  client.ev.on("messages.upsert", async ({ messages }) => {
-    const msg = messages[0];
-    await messageHandler(msg, client);
-  });
-
+  // Hapus event listener yang tidak perlu
   return client;
 }
 
 WAStart();
 
-// Message handler
-// Initialize messageTimers map for cooldown
+// Message handler dengan debounce
 const messageTimers = new Map();
+let lastMessageTime = 0;
+const DEBOUNCE_TIME = 2000; // 2 detik
 
 async function messageHandler(msg, sock) {
-  // Empty message handler since we removed all commands
-  return;
+  try {
+    if (!msg.message) return;
+
+    const now = Date.now();
+    if (now - lastMessageTime < DEBOUNCE_TIME) return;
+    lastMessageTime = now;
+
+    // Clear waiting animation if exists
+    if (global.waitingAnimation) {
+      clearInterval(global.waitingAnimation);
+    }
+
+  } catch (error) {
+    console.error("Error in messageHandler:", error);
+  }
 }
