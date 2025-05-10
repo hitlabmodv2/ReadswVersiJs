@@ -1,9 +1,42 @@
 
 // Bot Features
 exports.botConfig = {
-  aiHoshino: {
-    enabled: false,
-    cooldownTime: 1000
+  aiCharacters: {
+    hoshino: {
+      enabled: false,
+      cooldownTime: 1000,
+      sessionId: 'HoshinoTakanashi',
+      characterName: 'Hoshino Takanashi',
+      images: [
+        'https://files.catbox.moe/lza1uc.jpg',
+        'https://files.catbox.moe/dz3l1w.jpg',
+        'https://files.catbox.moe/0g66xr.jpg',
+        'https://files.catbox.moe/8i4bin.jpg',
+        'https://files.catbox.moe/2a8jkm.jpg',
+        'https://files.catbox.moe/owmntz.jpg',
+        'https://files.catbox.moe/hq3irj.jpg'
+      ]
+    },
+    hiura: {
+      enabled: false,
+      cooldownTime: 1000,
+      sessionId: 'HiuraMihate', 
+      characterName: 'Hiura Mihate',
+      images: [
+        'https://files.catbox.moe/5ndm3o.jpg'
+      ]
+    },
+    hitori: {
+      enabled: false,
+      cooldownTime: 1000,
+      sessionId: 'HitoriGotoh',
+      characterName: 'Hitori Gotoh',
+      images: [
+        'https://files.catbox.moe/yioehs.jpg',
+        'https://files.catbox.moe/52qp2p.jpg',
+        'https://files.catbox.moe/6q8zwy.jpg'
+      ]
+    }
   },
   autoReadStatus: true,
   autoLikeStatus: true,
@@ -35,28 +68,39 @@ exports.botConfig = {
   whiteList: []
 };
 
-// Feature Descriptions
+// Penjelasan Fitur-Fitur Bot
 exports.featureDescriptions = {
+  // Fitur AI Character
   aiHoshino: {
-    enabled: "Mengaktifkan/menonaktifkan fitur AI chat",
-    cooldownTime: "Waktu jeda antara respon AI dalam milidetik"
+    enabled: "Mengaktifkan/menonaktifkan fitur chat dengan AI Hoshino. Ketika aktif, bot dapat berkomunikasi seperti karakter anime.",
+    cooldownTime: "Waktu jeda yang diperlukan antara setiap respon AI (dalam milidetik) untuk mencegah spam"
   },
-  autoReadStatus: "Otomatis membaca status WhatsApp",
-  autoLikeStatus: "Otomatis memberikan reaksi emoji pada status",
-  downloadMediaStatus: "Mengunduh media dari status yang dilihat",
-  sensorNomor: "Menyembunyikan sebagian nomor WhatsApp di log",
-  SpeedReadStory: "Kecepatan membaca status dalam milidetik",
-  autoRejectCall: "Otomatis menolak panggilan masuk",
-  autoOnline: "Bot selalu terlihat online",
-  readReceipts: "Mengaktifkan tanda centang biru",
-  autoTyping: "Menampilkan status 'sedang mengetik'",
-  autoRecording: "Menampilkan status 'sedang merekam'",
-  emojiFile: "Pilihan file emoji (Lengkap_Emojis atau Costum_Emojis)",
-  antitagswv2: "Fitur anti-tag di grup",
-  maxWarnings: "Jumlah maksimal peringatan sebelum tindakan",
-  deleteMessages: "Hapus pesan yang melanggar",
-  kickEnabled: "Izinkan bot untuk mengeluarkan anggota",
-  warningTimeout: "Durasi peringatan dalam jam",
-  blackList: "Daftar nomor yang diblokir",
-  whiteList: "Daftar nomor yang diizinkan (jika kosong, semua diizinkan)"
+
+  // Fitur Status & Media
+  autoReadStatus: "Secara otomatis melihat status/story WhatsApp teman Anda tanpa perlu membukanya satu per satu",
+  autoLikeStatus: "Memberikan reaksi emoji secara otomatis pada status yang dilihat untuk meningkatkan interaksi",
+  downloadMediaStatus: "Menyimpan foto dan video dari status yang dilihat ke dalam folder penyimpanan bot",
+  sensorNomor: "Menyembunyikan beberapa digit nomor WhatsApp di log untuk menjaga privasi",
+  SpeedReadStory: "Mengatur seberapa cepat bot membaca status berikutnya (dalam milidetik)",
+
+  // Fitur Panggilan & Tampilan
+  autoRejectCall: "Menolak panggilan masuk secara otomatis untuk menghindari gangguan",
+  autoOnline: "Membuat status bot selalu online untuk menunjukkan keaktifan",
+  readReceipts: "Mengaktifkan tanda centang biru (read receipt) saat membaca pesan",
+  autoTyping: "Menampilkan indikator 'sedang mengetik...' saat bot memproses pesan",
+  autoRecording: "Menampilkan status 'sedang merekam' saat memproses pesan suara",
+
+  // Fitur Emoji & Interaksi
+  emojiFile: "Memilih kumpulan emoji yang akan digunakan (Lengkap_Emojis untuk semua emoji atau Costum_Emojis untuk emoji pilihan)",
+
+  // Fitur Keamanan Grup
+  antitagswv2: "Melindungi grup dari spam tag/mention berlebihan",
+  maxWarnings: "Batas peringatan yang diberikan sebelum bot mengambil tindakan",
+  deleteMessages: "Menghapus pesan-pesan yang melanggar aturan grup",
+  kickEnabled: "Mengizinkan bot untuk mengeluarkan anggota yang melanggar aturan",
+  warningTimeout: "Berapa lama peringatan akan bertahan sebelum dihapus (dalam jam)",
+
+  // Fitur Kontrol Akses
+  blackList: "Daftar nomor yang diblokir dan tidak dapat menggunakan fitur bot",
+  whiteList: "Daftar nomor yang diizinkan menggunakan bot (jika kosong, semua nomor diizinkan)"
 };
