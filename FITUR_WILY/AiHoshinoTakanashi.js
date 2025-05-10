@@ -128,25 +128,27 @@ async function handleMessage(msg, sock) {
     const randomImage = images[Math.floor(Math.random() * images.length)];
 
     async function ReplyRynzz(teks) {
-      const nedd = {      
-        contextInfo: {
-          forwardingScore: 999,
-          isForwarded: true,
-          forwardedNewsletterMessageInfo: {
-            newsletterName: `*${characterName.charAt(0).toUpperCase() + characterName.slice(1)}*`,
-            newsletterJid: sender,
+        const hariini = new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+        const packname = characterName.charAt(0).toUpperCase() + characterName.slice(1);
+        const nedd = {      
+          contextInfo: {
+            forwardingScore: 999,
+            isForwarded: true,
+            forwardedNewsletterMessageInfo: {
+              newsletterName: packname,
+              newsletterJid: "120363312297133690@newsletter",
+            },
+            externalAdReply: {  
+              showAdAttribution: true,
+              title: `${hariini}`,
+              body: `${packname}`,
+              previewType: "IMAGE",
+              thumbnailUrl: "https://files.catbox.moe/9cq0yk.jpg",
+              sourceUrl: "https://wa.me/6289688206739",
+            },
           },
-          externalAdReply: {  
-            showAdAttribution: true,
-            title: `*📅 ${new Date().toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'})}*`,
-            body: `*${characterName.charAt(0).toUpperCase() + characterName.slice(1)}*`,
-            previewType: "IMAGE",
-            thumbnailUrl: randomImage,
-            sourceUrl: `https://wa.me/${sender.split('@')[0]}`,
-          },
-        },
-        text: teks,
-      };
+          text: teks,
+        };
       return sock.sendMessage(msg.key.remoteJid, nedd, {
         quoted: msg,
       });
