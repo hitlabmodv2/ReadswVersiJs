@@ -1,6 +1,25 @@
 
-// Bot Features
+// Bot Configuration
 exports.botConfig = {
+  // WhatsApp Status Features
+  status: {
+    autoReadStatus: true,      // Auto read WhatsApp status
+    autoLikeStatus: true,      // Auto react to status with emoji
+    downloadMediaStatus: false, // Save status media to device
+    SpeedReadStory: 3000,      // Delay between reading status (ms)
+  },
+
+  // Backup Configuration
+  autoBackup: {
+    enabled: false,                    // Enable/disable auto backup
+    targetNumber: '6289688206739@s.whatsapp.net', // Backup destination number
+    interval: 30,                      // Backup interval value
+    intervalType: 'minutes',          // Interval type: 'seconds', 'minutes', 'hours'
+    sendBackup: true,                 // Send backup to target number
+    deleteBackupAfterSend: true       // Delete backup file after sending
+  },
+
+  // AI Characters Configuration
   aiCharacters: {
     hoshino: {
       enabled: false,
@@ -20,7 +39,7 @@ exports.botConfig = {
     hiura: {
       enabled: false,
       cooldownTime: 1000,
-      sessionId: 'HiuraMihate', 
+      sessionId: 'HiuraMihate',
       characterName: 'Hiura Mihate',
       images: [
         'https://files.catbox.moe/5ndm3o.jpg'
@@ -38,69 +57,88 @@ exports.botConfig = {
       ]
     }
   },
-  autoReadStatus: true,
-  autoLikeStatus: true,
-  downloadMediaStatus: false, 
-  sensorNomor: true,
-  SpeedReadStory: 3000,
-
-  // Call Settings
-  autoRejectCall: false,
 
   // Display Settings
-  autoOnline: true,
-  readReceipts: true,
-  autoTyping: false,
-  autoRecording: true,
-
-  // Emoji Settings
-  emojiFile: "Lengkap_Emojis",
-
-  // Anti-Tag Settings
-  antitagswv2: true,
-  maxWarnings: 5,
-  deleteMessages: true,
-  kickEnabled: true, 
-  warningTimeout: 24,
-
-  // Filter Settings
-  blackList: [],
-  whiteList: []
-};
-
-// Penjelasan Fitur-Fitur Bot
-exports.featureDescriptions = {
-  // Fitur AI Character
-  aiHoshino: {
-    enabled: "Mengaktifkan/menonaktifkan fitur chat dengan AI Hoshino. Ketika aktif, bot dapat berkomunikasi seperti karakter anime.",
-    cooldownTime: "Waktu jeda yang diperlukan antara setiap respon AI (dalam milidetik) untuk mencegah spam"
+  display: {
+    autoOnline: true,     // Always show online status
+    readReceipts: false,   // Show read receipts
+    autoTyping: false,    // Show typing indicator
+    autoRecording: true,  // Show recording indicator
+    sensorNomor: true,    // Hide phone numbers in logs
   },
 
-  // Fitur Status & Media
-  autoReadStatus: "Secara otomatis melihat status/story WhatsApp teman Anda tanpa perlu membukanya satu per satu",
-  autoLikeStatus: "Memberikan reaksi emoji secara otomatis pada status yang dilihat untuk meningkatkan interaksi",
-  downloadMediaStatus: "Menyimpan foto dan video dari status yang dilihat ke dalam folder penyimpanan bot",
-  sensorNomor: "Menyembunyikan beberapa digit nomor WhatsApp di log untuk menjaga privasi",
-  SpeedReadStory: "Mengatur seberapa cepat bot membaca status berikutnya (dalam milidetik)",
+  // Call Handling
+  call: {
+    autoRejectCall: false // Auto reject incoming calls
+  },
 
-  // Fitur Panggilan & Tampilan
-  autoRejectCall: "Menolak panggilan masuk secara otomatis untuk menghindari gangguan",
-  autoOnline: "Membuat status bot selalu online untuk menunjukkan keaktifan",
-  readReceipts: "Mengaktifkan tanda centang biru (read receipt) saat membaca pesan",
-  autoTyping: "Menampilkan indikator 'sedang mengetik...' saat bot memproses pesan",
-  autoRecording: "Menampilkan status 'sedang merekam' saat memproses pesan suara",
+  // Emoji Configuration
+  emoji: {
+    emojiFile: "Lengkap_Emojis" // Emoji set to use
+  },
 
-  // Fitur Emoji & Interaksi
-  emojiFile: "Memilih kumpulan emoji yang akan digunakan (Lengkap_Emojis untuk semua emoji atau Costum_Emojis untuk emoji pilihan)",
+  // Anti-Tag Protection
+  antiTag: {
+    antitagswv2: true,     // Enable anti-tag protection
+    maxWarnings: 5,        // Maximum warnings before action
+    deleteMessages: true,  // Delete violating messages
+    kickEnabled: true,     // Enable kicking violators
+    warningTimeout: 24     // Warning timeout in hours
+  },
 
-  // Fitur Keamanan Grup
-  antitagswv2: "Melindungi grup dari spam tag/mention berlebihan",
-  maxWarnings: "Batas peringatan yang diberikan sebelum bot mengambil tindakan",
-  deleteMessages: "Menghapus pesan-pesan yang melanggar aturan grup",
-  kickEnabled: "Mengizinkan bot untuk mengeluarkan anggota yang melanggar aturan",
-  warningTimeout: "Berapa lama peringatan akan bertahan sebelum dihapus (dalam jam)",
+  // Access Control
+  accessControl: {
+    blackList: [], // Blocked numbers
+    whiteList: []  // Allowed numbers
+  }
+};
 
-  // Fitur Kontrol Akses
-  blackList: "Daftar nomor yang diblokir dan tidak dapat menggunakan fitur bot",
-  whiteList: "Daftar nomor yang diizinkan menggunakan bot (jika kosong, semua nomor diizinkan)"
+// Feature Descriptions
+exports.featureDescriptions = {
+  // Status Features
+  status: {
+    autoReadStatus: "Automatically view WhatsApp status/stories",
+    autoLikeStatus: "Automatically react to viewed status with emoji",
+    downloadMediaStatus: "Save status media to storage",
+    SpeedReadStory: "Set delay between reading status (in milliseconds)"
+  },
+
+  // AI Character Features
+  aiCharacter: {
+    enabled: "Enable/disable AI character chat feature",
+    cooldownTime: "Cooldown time between AI responses (in milliseconds)"
+  },
+
+  // Call Features
+  call: {
+    autoRejectCall: "Automatically reject incoming calls"
+  },
+
+  // Display Features
+  display: {
+    autoOnline: "Keep bot status always online",
+    readReceipts: "Enable blue ticks for read messages",
+    autoTyping: "Show typing indicator when processing",
+    autoRecording: "Show recording status for voice messages"
+  },
+
+  // Emoji Features
+  emoji: {
+    emojiFile: "Choose emoji set (Lengkap_Emojis for all or Costum_Emojis for selected)"
+  },
+
+  // Group Security
+  security: {
+    antitagswv2: "Protect groups from excessive tagging/mentions",
+    maxWarnings: "Warning limit before taking action",
+    deleteMessages: "Delete rule-violating messages",
+    kickEnabled: "Allow bot to remove rule violators",
+    warningTimeout: "Warning expiry time (in hours)"
+  },
+
+  // Access Control
+  access: {
+    blackList: "Blocked numbers list",
+    whiteList: "Allowed numbers list (if empty, all allowed)"
+  }
 };
