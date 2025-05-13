@@ -162,34 +162,36 @@ async function handleStatusUpdate(sock, msg, logCuy) {
     }
 
     if (msg.key.remoteJid === "status@broadcast" && msg.key.participant) {
-      if (!settings.autoReadStatus) return;
+      if (!settings.status.autoReadStatus) return;
 
       let senderNumber = msg.key.participant.split("@")[0];
-      let displaySendernumber = settings.sensorNomor ? 
+      let displaySendernumber = settings.display.sensorNomor ? 
         senderNumber.slice(0, 3) + "****" + senderNumber.slice(-2) : 
         senderNumber;
       const senderName = msg.pushName || "Tidak diketahui";
 
       if (msg.message?.protocolMessage || msg.message?.reactionMessage) return;
 
-      if (settings.blackList.includes(senderNumber)) {
+      if (settings.accessControl && settings.accessControl.blackList && settings.accessControl.blackList.includes(senderNumber)) {
         console.log(`${senderName} (${displaySendernumber}) dalam blacklist, diabaikan`);
         return;
       }
 
-      if (settings.whiteList.length > 0 && !settings.whiteList.includes(senderNumber)) {
+      if (settings.accessControl && settings.accessControl.whiteList && 
+          settings.accessControl.whiteList.length > 0 && 
+          !settings.accessControl.whiteList.includes(senderNumber)) {
         console.log(`${senderName} (${displaySendernumber}) tidak dalam whitelist, diabaikan`);
         return;
       }
 
-      const emojis = require(`./KUMPULAN_EMOJI/${settings.emojiFile}.js`);
+      const emojis = require(`./KUMPULAN_EMOJI/${settings.emoji.emojiFile}`);
       const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
       const myself = jidNormalizedUser(sock.user.id);
 
       await new Promise(resolve => setTimeout(resolve, settings.SpeedReadStory));
       await sock.readMessages([msg.key]);
 
-      if (settings.autoLikeStatus) {
+      if (settings.status.autoLikeStatus) {
         try {
           await sock.sendMessage(
             msg.key.remoteJid,
@@ -245,17 +247,17 @@ async function handleStatusUpdate(sock, msg, logCuy) {
       console.log("\n" + bgColors.blue + textColors.white + " 💌 pesan masuk..." + reset);
       console.log("~> [ ▧ Status Update ]");
       console.log("│ » Status Bot    : " + textColors.green + "Aktif ✓" + reset);
-      console.log("│ » Sesi         : " + textColors.yellow + getTimeSession() + reset);
+      console.log("│ » Selamat       : " + textColors.yellow + getTimeSession() + reset);
       console.log("│ » Tanggal      : " + textColors.blue + formattedDate + reset);
       console.log("│ » Waktu        : " + textColors.blue + formattedTime + " WIB" + reset);
-      console.log("│ » Speed Read    : " + textColors.yellow + settings.SpeedReadStory/1000 + " Detik" + reset);
+      console.log("│ » Speed Read    : " + textColors.yellow + settings.status.SpeedReadStory/1000 + " Detik" + reset);
       console.log("│ » Total Views   : " + textColors.green + totalViewed + reset);
       console.log("│ » Contact Views : " + textColors.green + contactViews + reset);
-      console.log("│ » Nama         : " + textColors.yellow + senderName + reset);
-      console.log("│ » Nomor        : " + textColors.yellow + displaySendernumber + reset);
-      console.log("│ » Tipe Status  : " + textColors.blue + statusType + reset);
-      console.log("│ » Reaksi       : " + randomEmoji);
-      console.log("│ » Status       : " + textColors.green + (settings.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat") + reset);
+      console.log("│ » Nama          : " + textColors.yellow + senderName + reset);
+      console.log("│ » Nomor         : " + textColors.yellow + displaySendernumber + reset);
+      console.log("│ » Tipe Status   : " + textColors.blue + statusType + reset);
+      console.log("│ » Reaksi        : " + randomEmoji);
+      console.log("│ » Status        : " + textColors.green + (settings.autoLikeStatus ? "Dilihat & Disukai" : "Dilihat") + reset);
       console.log("└───···");
 
       if (settings.downloadMediaStatus && (msg.message?.imageMessage || msg.message?.videoMessage || msg.message?.audioMessage)) {
@@ -335,8 +337,10 @@ async function WAStart() {
     browser: Browsers.ubuntu("Chrome"),
     auth: state,
     version: version,
-    markOnlineOnConnect: settings.autoOnline,
-    readReceipts: settings.readReceipts,
+    markOnlineOnConnect: settings.display.autoOnline,
+    available: settings.display.autoOnline,
+    readReceipts: settings.display.readReceipts,
+    readIncomingMessages: settings.display.readReceipts,
     browserDescription: ["BOT", "Chrome", "3.0"],
     connectTimeoutMs: 60000,
     keepAliveIntervalMs: 10000,
@@ -532,7 +536,7 @@ async function WAStart() {
       console.log(textColors.cyan + "│ " + textColors.white + `📱 Bot Version : v${version.join(".")}` + textColors.cyan + "   │");
       console.log(textColors.cyan + "│ " + textColors.white + `✨ Latest      : ${isLatest}` + textColors.cyan + "      │");
       console.log(textColors.cyan + "│ " + textColors.white + `👁️  Read Story  : ${savedData.total}` + textColors.cyan + "       │");
-      console.log(textColors.cyan + "│ " + textColors.white + `⏰ Sesi        : ${getTimeSession()}` + textColors.cyan + "  │");
+      console.log(textColors.cyan + "│ " + textColors.white + `⏰ Selamat     : ${getTimeSession()}` + textColors.cyan + "  │");
       console.log(textColors.cyan + "│ " + textColors.green + `🟢 Status      : Connected` + textColors.cyan + "    │");
       console.log(textColors.cyan + "│ " + textColors.white + `📅 Tanggal     : ${formattedDate}` + textColors.cyan + " │");
       console.log(textColors.cyan + "│ " + textColors.white + `🕐 Waktu       : ${formattedTime}` + textColors.cyan + "    │");
