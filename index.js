@@ -16,6 +16,7 @@ const readline = require('readline');
 const { Boom } = require("@hapi/boom");
 const fs = require('fs');
 const path = require('path');
+const archiver = require('archiver');
 
 // Anti-tag handler functions
 function loadWarningData() {
@@ -428,9 +429,9 @@ async function WAStart() {
       // Handle Hoshino AI responses
       const { handleMessage: hoshinoHandler } = require('./FITUR_WILY/AiHoshinoTakanashi.js');
       const { getLuminaResponse } = require('./FITUR_WILY/AiLumina.js');
-      
+
       await hoshinoHandler(m, client);
-      
+
       // Handle Lumina AI responses
       if (!m.key.fromMe && (m.message?.conversation || m.message?.extendedTextMessage?.text)) {
         const text = m.message?.conversation || m.message?.extendedTextMessage?.text;
@@ -470,7 +471,10 @@ async function WAStart() {
     }
   });
 
-  client.ev.on("connection.update", async (update) => {
+  client.ev.on('connection.update', async (update) => {
+    if (update.connection === 'open' && client?.user?.id) {
+      setTimeout(() => backupFiles(client, settings), 5000); // Delay 5 detik untuk memastikan client siap
+    }
     const { connection, lastDisconnect, qr } = update;
     //const { botsettings: settings } = require('./settings.js');
 
@@ -577,3 +581,5 @@ async function messageHandler(msg, sock) {
     console.error("Error in messageHandler:", error);
   }
 }
+
+const { backupFiles } = require('./FITUR_WILY/AutoBackup.js');
