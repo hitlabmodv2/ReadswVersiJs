@@ -1,7 +1,7 @@
 
-// Bot Configuration
+// WhatsApp Bot Configuration
 exports.botConfig = {
-  // WhatsApp Status Features
+  // Status & Story Features
   status: {
     autoReadStatus: true,      // Auto read WhatsApp status
     autoLikeStatus: true,      // Auto react to status with emoji
@@ -9,7 +9,36 @@ exports.botConfig = {
     SpeedReadStory: 3000,      // Delay between reading status (ms)
   },
 
-  // Backup Configuration
+  // Emoji System
+  emoji: {
+    emojiFile: "Costum_Emojis"  // Lengkap_Emojis or Costum_Emojis
+  },
+
+  // Display & Interface Settings
+  display: {
+    autoOnline: true,     // Always show online status
+    readReceipts: true,   // Show read receipts
+    autoTyping: false,    // Show typing indicator
+    autoRecording: true,  // Show recording indicator
+    sensorNomor: true,    // Hide phone numbers in logs
+  },
+
+  // Security & Privacy
+  accessControl: {
+    blackList: [], // Blocked numbers
+    whiteList: []  // Allowed numbers
+  },
+
+  // Anti-Tag Protection
+  antiTag: {
+    antitagswv2: true,     // Enable anti-tag protection
+    maxWarnings: 5,        // Maximum warnings before action
+    deleteMessages: true,  // Delete violating messages
+    kickEnabled: true,     // Enable kicking violators
+    warningTimeout: 24     // Warning timeout in hours
+  },
+
+  // Backup System
   autoBackup: {
     enabled: false,                    // Enable/disable auto backup
     targetNumber: '6289688206739@s.whatsapp.net', // Backup destination number
@@ -17,6 +46,11 @@ exports.botConfig = {
     intervalType: 'minutes',          // Interval type: 'seconds', 'minutes', 'hours'
     sendBackup: true,                 // Send backup to target number
     deleteBackupAfterSend: true       // Delete backup file after sending
+  },
+
+  // Call Handling
+  call: {
+    autoRejectCall: false // Auto reject incoming calls
   },
 
   // AI Characters Configuration
@@ -56,40 +90,6 @@ exports.botConfig = {
         'https://files.catbox.moe/6q8zwy.jpg'
       ]
     }
-  },
-
-  // Display Settings
-  display: {
-    autoOnline: true,     // Always show online status
-    readReceipts: false,   // Show read receipts
-    autoTyping: false,    // Show typing indicator
-    autoRecording: true,  // Show recording indicator
-    sensorNomor: true,    // Hide phone numbers in logs
-  },
-
-  // Call Handling
-  call: {
-    autoRejectCall: false // Auto reject incoming calls
-  },
-
-  // Emoji Configuration
-  emoji: {
-    emojiFile: "Lengkap_Emojis" // Emoji set to use
-  },
-
-  // Anti-Tag Protection
-  antiTag: {
-    antitagswv2: true,     // Enable anti-tag protection
-    maxWarnings: 5,        // Maximum warnings before action
-    deleteMessages: true,  // Delete violating messages
-    kickEnabled: true,     // Enable kicking violators
-    warningTimeout: 24     // Warning timeout in hours
-  },
-
-  // Access Control
-  accessControl: {
-    blackList: [], // Blocked numbers
-    whiteList: []  // Allowed numbers
   }
 };
 
@@ -103,6 +103,23 @@ exports.featureDescriptions = {
     SpeedReadStory: "Set delay between reading status (in milliseconds)"
   },
 
+  // Display Features
+  display: {
+    autoOnline: "Keep bot status always online",
+    readReceipts: "Enable blue ticks for read messages",
+    autoTyping: "Show typing indicator when processing",
+    autoRecording: "Show recording status for voice messages"
+  },
+
+  // Security Features
+  security: {
+    antitagswv2: "Protect groups from excessive tagging/mentions",
+    maxWarnings: "Warning limit before taking action",
+    deleteMessages: "Delete rule-violating messages",
+    kickEnabled: "Allow bot to remove rule violators",
+    warningTimeout: "Warning expiry time (in hours)"
+  },
+
   // AI Character Features
   aiCharacter: {
     enabled: "Enable/disable AI character chat feature",
@@ -114,26 +131,9 @@ exports.featureDescriptions = {
     autoRejectCall: "Automatically reject incoming calls"
   },
 
-  // Display Features
-  display: {
-    autoOnline: "Keep bot status always online",
-    readReceipts: "Enable blue ticks for read messages",
-    autoTyping: "Show typing indicator when processing",
-    autoRecording: "Show recording status for voice messages"
-  },
-
   // Emoji Features
   emoji: {
     emojiFile: "Choose emoji set (Lengkap_Emojis for all or Costum_Emojis for selected)"
-  },
-
-  // Group Security
-  security: {
-    antitagswv2: "Protect groups from excessive tagging/mentions",
-    maxWarnings: "Warning limit before taking action",
-    deleteMessages: "Delete rule-violating messages",
-    kickEnabled: "Allow bot to remove rule violators",
-    warningTimeout: "Warning expiry time (in hours)"
   },
 
   // Access Control
